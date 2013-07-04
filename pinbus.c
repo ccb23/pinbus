@@ -15,26 +15,27 @@
 
 #define NR_PINBUS_DEVS	1
 
+
+
+#define END_OF_MSG_CHAR 0xFF
+
 #define GPIO_BUS_PIN0 8
 #define GPIO_BUS_PIN1 11
 #define GPIO_BUS_PIN2 25
 #define GPIO_BUS_PIN3 9
 #define GPIO_BUS_PIN4 10
 #define GPIO_BUS_PIN5 24
-#define GPIO_BUS_PIN6 23
-#define GPIO_BUS_PIN7 22
+#define GPIO_BUS_PIN6 17
+#define GPIO_BUS_PIN7 4 
 
-//TODO start clock_irq only when device is open
-
-#define END_OF_MSG_CHAR 'X'
+unsigned int pinbus_busy_gpio 		= 22;
+unsigned int pinbus_clock_gpio 		= 7; // not connected
+unsigned int pinbus_status_gpio         = 23;
 
 unsigned int pinbus_wake_threshold 	= 5;
 unsigned int pinbus_kfifo_size 		= 1024;
 unsigned int pinbus_kfifo_timeout	= (HZ / 10);
 unsigned int pinbus_bus_freq 		= (HZ - 1);
-unsigned int pinbus_busy_gpio 		= 4;
-unsigned int pinbus_clock_gpio 		= 7;
-unsigned int pinbus_status_gpio         = 17;
 unsigned int pinbus_enable_clock_gpio   = 0;
 unsigned int pinbus_enable_dbg          = 0;
 
@@ -61,8 +62,10 @@ struct pinbus_dev {
 };
 
 static struct pinbus_dev *g_pinbus_dev = NULL; 
+
 // global device pointer for free in module_exit
 
+//TODO start clock_irq only when device is open
 
 int pinbus_open(struct inode *inode, struct file *filp) {
 	struct pinbus_dev *pin_dev;
@@ -210,14 +213,14 @@ static int pinbus_init(void){
 	busy_irq_number = gpio_to_irq(pinbus_busy_gpio);
 	stat_irq_number = gpio_to_irq(pinbus_status_gpio);
 
-	if ( request_irq(busy_irq_number, pinbus_busy_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpio_pinbus", g_pinbus_dev) ) {
+	if ( request_irq(busy_irq_number, pinbus_busy_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_busy_pinbus", g_pinbus_dev) ) {
 		printk(KERN_ERR "GPIO: trouble requesting IRQ %d\n",busy_irq_number);
 		return(-EIO);
 	} else {
 		printk(KERN_ERR "GPIO: requesting IRQ %d-> fine\n", busy_irq_number);
 	}
 
-	if ( request_irq(stat_irq_number, pinbus_stat_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpio_pinbus", g_pinbus_dev) ) {
+	if ( request_irq(stat_irq_number, pinbus_stat_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_stat_pinbus", g_pinbus_dev) ) {
 		printk(KERN_ERR "GPIO: trouble requesting IRQ %d\n",stat_irq_number);
 		free_irq(busy_irq_number, g_pinbus_dev);
 		return(-EIO);
