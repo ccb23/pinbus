@@ -22,7 +22,7 @@
 
 /*------------------------------------------------------------------------------------------*\
 \*------------------------------------------------------------------------------------------*/
-#define dbg(level, format, arg...) do { if ( unlikely(pinbus_enable_dbg >= level) ) printk(KERN_WARNING ":[%s]: " format \n", __FUNCTION__, ##arg); } while ( 0 )
+#define dbg(level, format, arg...) do { if ( unlikely(pinbus_enable_dbg >= level) ) printk(KERN_WARNING ":[%s]: " format "\n", __FUNCTION__, ##arg); } while ( 0 )
 
 #define NR_PINBUS_DEVS 1
 #define END_OF_MSG_CHAR 0xFF
@@ -152,15 +152,15 @@ static irqreturn_t pinbus_busy_interrupt(int irq, void* data) {
             ( gpio_get_value( GPIO_BUS_PIN6 ) << 6) |
             ( gpio_get_value( GPIO_BUS_PIN7 ) << 7) ;
         kfifo_in(&pin_dev->fifo,&bus_char, 1);
-        dbg( "gpio busdata event on irq=%d, data=%c", irq, bus_char );
+        dbg(1, "gpio busdata event on irq=%d, data=%c", irq, bus_char );
 
     } else {
-        dbg( "clock is down, ignore irq=%d", irq);
+        dbg(1, "clock is down, ignore irq=%d", irq);
     }
 
     if ( kfifo_len(&pin_dev->fifo) >= pinbus_wake_threshold ){
         wake_up_interruptible(&pin_dev->wait_for_data);
-        dbg( "Wake Reader" );
+        dbg(1, "Wake Reader" );
     }
 
     return IRQ_HANDLED;
@@ -169,11 +169,11 @@ static irqreturn_t pinbus_busy_interrupt(int irq, void* data) {
 static irqreturn_t pinbus_stat_interrupt(int irq, void* data) {
     struct pinbus_dev *pin_dev = (struct pinbus_dev *)data;
     unsigned char bus_char = END_OF_MSG_CHAR;
-    dbg( "gpio event stat on irq=%d", irq );
+    dbg(1, "gpio event stat on irq=%d", irq );
     kfifo_in(&pin_dev->fifo,&bus_char, 1);
     if ( kfifo_len(&pin_dev->fifo) >= pinbus_wake_threshold ){
         wake_up_interruptible(&pin_dev->wait_for_data);
-        dbg( KERN_ERR "Wake Reader" );
+        dbg(1, KERN_ERR "Wake Reader" );
     }
     return IRQ_HANDLED;
 }
