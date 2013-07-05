@@ -116,9 +116,11 @@ ssize_t pinbus_read(struct file *filp, char __user *buf, size_t count, loff_t *f
     }
 
     bytes_to_copy = min(count, kfifo_len(&pin_dev->fifo));
-    kfifo_to_user(&pin_dev->fifo, buf, bytes_to_copy, &retval);
+    if ( kfifo_to_user(&pin_dev->fifo, buf, bytes_to_copy, &retval) != 0)
+        retval = -EINVAL;
 
     return retval;
+
 }
 
 loff_t pinbus_llseek(struct file *filp, loff_t off, int whence) {
