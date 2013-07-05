@@ -1,1 +1,0 @@
-cmd_/usr/src/raspberry_kernel/my_first_kernel_module/pinbus.ko := ld -EL -r  -T /usr/src/raspberry_kernel/linux-source-3.6.11+/scripts/module-common.lds --build-id  -o /usr/src/raspberry_kernel/my_first_kernel_module/pinbus.ko /usr/src/raspberry_kernel/my_first_kernel_module/pinbus.o /usr/src/raspberry_kernel/my_first_kernel_module/pinbus.mod.o
