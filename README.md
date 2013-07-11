@@ -1,0 +1,20 @@
+# pinbus
+
+
+## how to setup ubuntu
+
+```
+sudo apt-get source linux-image-$(uname -r)
+cd linux-3.2.0/
+cp /boot/config-3.2.0-25-generic .config
+cp /lib/modules/3.2.0-25-generic/build/Module.symvers .
+vi Makefile (EXTRAVERSION anpassen)
+make clean
+make oldconfig
+make prepare
+make prepare0
+make scripts
+
+cd /module/dir/in/homeverzeichnis
+make
+```
