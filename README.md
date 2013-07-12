@@ -1,6 +1,5 @@
 # pinbus
 
-
 ## how to setup ubuntu
 
 ```
@@ -18,3 +17,18 @@ make scripts
 cd /module/dir/in/homeverzeichnis
 make
 ```
+
+## build dkms
+checkout this dir to /usr/src/pinbus-0.23
+sudo dkms add -m pinbus -v 0.23
+sudo dkms build -m pinbus -v 0.23
+
+
+## build debian dkms package
+sudo dkms mkdsc -m pinbus -v 0.23 --source-only
+sudo dkms mkdeb -m pinbus -v 0.23 --source-only
+
+cp  /var/lib/dkms/pinbus/0.23/deb/pinbus-dkms_0.23_all.deb .
+sudo dkms remove pinbus/0.23 --all
+sudo rm -rf /var/lib/dkms/pinbus/
+

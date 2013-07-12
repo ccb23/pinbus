@@ -1,23 +1,20 @@
 ifeq ($(KERNELRELEASE),)
+#Outside Kbuild Part
 
-KERNELDIR ?= /usr/src/raspberry_kernel/linux-source-3.6.11+
-PWD := $(shell pwd)
+KDIR ?= /lib/modules/`uname -r`/build
+$(info Running Makefile outside Kbuild-System)
 
-.PHONY: build clean
-
-mod:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+default:
+	$(MAKE) -C $(KDIR) M=$$PWD
 
 clean:
-	rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c
+	rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c modules.order Module.symvers .tmp_versions
 
-load:
-	-rmmod pinbus 
-	insmod pinbus.ko
-	-mknod /dev/pinbus c `grep pinbus /proc/devices | cut -d ' ' -f 1` 0
 else
+#Kbuild Part
 
 $(info Building with KERNELRELEASE = ${KERNELRELEASE})
 obj-m :=    pinbus.o
 
 endif
+

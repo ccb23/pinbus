@@ -1,11 +1,4 @@
 
-/* 
- * TODO:
- * start clock_irq only when device is open
- * global device pointer for free in module_exit
- *
- */
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/sched.h>
@@ -19,9 +12,11 @@
 #include <linux/slab.h>
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
+#include <linux/device.h>
 
 /*------------------------------------------------------------------------------------------*\
 \*------------------------------------------------------------------------------------------*/
+#define DEVICE_NAME "pinbus"
 #define dbg(level, format, arg...) do { if ( unlikely(pinbus_enable_dbg >= level) ) printk(KERN_WARNING ":[%s]: " format "\n", __FUNCTION__, ##arg); } while ( 0 )
 
 #define NR_PINBUS_DEVS 1
@@ -71,6 +66,7 @@ struct pinbus_dev {
 };
 
 static struct pinbus_dev *g_pinbus_dev = NULL; 
+static struct class *pinbus_class = NULL;
 
 /*------------------------------------------------------------------------------------------*\
 \*------------------------------------------------------------------------------------------*/
@@ -191,7 +187,7 @@ static int pinbus_init(void){
 
     printk(KERN_INFO "Loading Pinbus Module\n");
 
-    result = alloc_chrdev_region(&dev, 0, NR_PINBUS_DEVS, "pinbus");
+    result = alloc_chrdev_region(&dev, 0, NR_PINBUS_DEVS, DEVICE_NAME);
     pinbus_major = MAJOR(dev);
     if (result < 0)
         return result;
@@ -206,6 +202,11 @@ static int pinbus_init(void){
     cdev_init(&g_pinbus_dev->cdev, &pinbus_fops);
     g_pinbus_dev->cdev.owner = THIS_MODULE;
     g_pinbus_dev->cdev.ops = &pinbus_fops;
+
+        /* register sysfs class for udev */
+    pinbus_class = class_create(THIS_MODULE, DEVICE_NAME);
+    device_create( pinbus_class, NULL, devno, NULL, DEVICE_NAME);
+
     atomic_set(&g_pinbus_dev->device_available, 1);
     init_waitqueue_head(&g_pinbus_dev->wait_for_data);
 
@@ -244,12 +245,19 @@ static int pinbus_init(void){
 
 static void pinbus_exit(void) {
 
+	int devno = MKDEV( pinbus_major, 0);
     printk(KERN_INFO "Shutting down Pinbus Module\n");
+
+    /* unregister sysfs class for udev */
+    device_destroy( pinbus_class, devno );
+    class_destroy( pinbus_class );
+    pinbus_class = NULL;
+
     free_irq(busy_irq_number, g_pinbus_dev);
     free_irq(stat_irq_number, g_pinbus_dev);
     cdev_del(&g_pinbus_dev->cdev);
     kfree(g_pinbus_dev);
-    unregister_chrdev_region(MKDEV (pinbus_major, 0), NR_PINBUS_DEVS);
+    unregister_chrdev_region( devno, NR_PINBUS_DEVS);
     printk(KERN_INFO "Shutting down Pinbus Module successful\n");
 
 }
