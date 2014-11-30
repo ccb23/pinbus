@@ -26,6 +26,22 @@ sudo dkms remove pinbus/0.23 --all
 sudo rm -rf /var/lib/dkms/pinbus/
 ```
 
+## update rpi system
+
+```
+sudo apt-get update && sudo apt-get dist-upgrade
+sudo rpi-update
+```
+
+## install dkms package on raspberrypi
+
+```
+sudo apt-get install gcc-4.7 cpp-4.7
+wget http://www.niksula.hut.fi/~mhiienka/Rpi/linux-headers-rpi/linux-headers-3.12.33%2b_3.12.33%2b-2_armhf.deb
+sudo dpkg -i linux-headers-3.12.33+_3.12.33+-2_armhf.deb
+sudo dpkg -i pinbus-dkms_0.23_all.deb
+```
+
 ## howto setup ubuntu build environment ( with whole kernel tree )
 
 ```
