@@ -34,3 +34,5 @@ Am Oszi:
     D1:Status
     D0:Busy
 
+BusPins:
+    TMNT_manual.pdf (page 47)
