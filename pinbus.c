@@ -22,18 +22,18 @@
 #define NR_PINBUS_DEVS 1
 #define END_OF_MSG_CHAR 0xFF
 
-#define GPIO_BUS_PIN0 8
-#define GPIO_BUS_PIN1 11
-#define GPIO_BUS_PIN2 25
-#define GPIO_BUS_PIN3 9
-#define GPIO_BUS_PIN4 10
-#define GPIO_BUS_PIN5 24
-#define GPIO_BUS_PIN6 17
-#define GPIO_BUS_PIN7 4 
+#define GPIO_BUS_PIN0 18
+#define GPIO_BUS_PIN1 21
+#define GPIO_BUS_PIN2 22
+#define GPIO_BUS_PIN3 23
+#define GPIO_BUS_PIN4 24
+#define GPIO_BUS_PIN5 10
+#define GPIO_BUS_PIN6 9
+#define GPIO_BUS_PIN7 25
 
-unsigned int pinbus_busy_gpio   = 22;
-unsigned int pinbus_clock_gpio  = 7; //currently not connected in our setup
-unsigned int pinbus_status_gpio = 23;
+unsigned int pinbus_busy_gpio   = 4;
+unsigned int pinbus_clock_gpio  = 11; //currently not connected in our setup
+unsigned int pinbus_status_gpio = 17;
 
 unsigned int pinbus_wake_threshold        = 5;
 unsigned int pinbus_kfifo_size            = 1024;
@@ -223,14 +223,16 @@ static int pinbus_init(void){
     busy_irq_number = gpio_to_irq(pinbus_busy_gpio);
     stat_irq_number = gpio_to_irq(pinbus_status_gpio);
 
-    if ( request_irq(busy_irq_number, pinbus_busy_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_busy_pinbus", g_pinbus_dev) ) {
+    if ( request_irq(busy_irq_number, pinbus_busy_interrupt,
+		     IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_busy_pinbus", g_pinbus_dev) ) {
         printk(KERN_ERR "GPIO: trouble requesting IRQ %d\n", busy_irq_number);
         return(-EIO);
     } else {
         printk(KERN_INFO "GPIO: requesting IRQ %d-> fine\n", busy_irq_number);
     }
 
-    if ( request_irq(stat_irq_number, pinbus_stat_interrupt, IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_stat_pinbus", g_pinbus_dev) ) {
+    if ( request_irq(stat_irq_number, pinbus_stat_interrupt, 
+		     IRQF_TRIGGER_FALLING|IRQF_ONESHOT, "gpiof_stat_pinbus", g_pinbus_dev) ) {
         printk(KERN_ERR "GPIO: trouble requesting IRQ %d\n",stat_irq_number);
         free_irq(busy_irq_number, g_pinbus_dev);
         return(-EIO);
