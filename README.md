@@ -59,3 +59,12 @@ make scripts
 cd /pinbus/dir/
 make
 ```
+
+## howto autostart service on raspberry pi
+
+```
+git clone https://github.com/ccb23/pinbus.git /usr/src/pinbus
+echo pinbus >> /etc/modules
+echo 'nohup /usr/src/pinbus/rc.pinbus &' >> /etc/rc.local
+
+```
