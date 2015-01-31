@@ -29,4 +29,8 @@ Sequenz[1-7]:
 
 
 
+Am Oszi:
+    D10:clock
+    D1:Status
+    D0:Busy
 
