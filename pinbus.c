@@ -23,7 +23,7 @@
 #define END_OF_MSG_CHAR 0xFF
 
 #define GPIO_BUS_PIN0 18
-#define GPIO_BUS_PIN1 21
+#define GPIO_BUS_PIN1 27
 #define GPIO_BUS_PIN2 22
 #define GPIO_BUS_PIN3 23
 #define GPIO_BUS_PIN4 24

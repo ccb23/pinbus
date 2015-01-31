@@ -42,8 +42,8 @@ Raspberry-Pi-GPIO-Pin-Belegung an unserer Lochrasterplatine (Pin1=Rotes Flachban
 GND          <--> PINBUS_01 <--> LR_PIN_01 <--> RP_06 <--> GND
 BUSY (schw)  <--> PINBUS_03 <--> LR_PIN_02 <--> RP_07 <--> GPIO_04
 STAT (weiß)  <--> PINBUS_04 <--> LR_PIN_03 <--> RP_11 <--> GPIO_17
-DAT_0        <--> PINBUS_11 <--> LR_PIN_04 <--> RP_12 <--> GPIO_18 <<<--- fehler
-DAT_1        <--> PINBUS_12 <--> LR_PIN_05 <--> RP_13 <--> GPIO_21
+DAT_0        <--> PINBUS_11 <--> LR_PIN_04 <--> RP_12 <--> GPIO_18 
+DAT_1        <--> PINBUS_12 <--> LR_PIN_05 <--> RP_13 <--> GPIO_27 <-- (Vorsicht in HW_REV1 GPIO_21)
 DAT_2        <--> PINBUS_13 <--> LR_PIN_06 <--> RP_15 <--> GPIO_22
 DAT_3        <--> PINBUS_14 <--> LR_PIN_07 <--> RP_16 <--> GPIO_23
 DAT_4        <--> PINBUS_15 <--> LR_PIN_08 <--> RP_18 <--> GPIO_24
