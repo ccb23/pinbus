@@ -1,0 +1,32 @@
+Samplefrequenz:
+1 kHz, d.h der Abstand zwischen zwei fallenden Busy-Flanken ist ca. 1ms
+
+pinbus_busy_gpio:
+
+
+Sequenze einer Uebertragung(es sind ausschließlich die Flankenänderungen dokumentiert):
+
+Initial:
+    Busy=0
+    Status=0
+    Clock=1
+    Reset=0
+
+Sequenz[0]:
+    Clock=0
+    DataX=1
+    Busy=1
+    Clock=1
+    Status=1
+    Busy=0 (Fallende BusyFlanke ist der Samplezeitpunkt)
+
+Sequenz[1-7]:
+    Clock=0
+    DataX=1
+    Busy=1
+    Clock=1
+    Busy=0 (Fallende BusyFlanke ist der Samplezeitpunkt)
+
+
+
+
