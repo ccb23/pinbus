@@ -65,6 +65,6 @@ make
 ```
 git clone https://github.com/ccb23/pinbus.git /usr/src/pinbus
 echo pinbus >> /etc/modules
-echo 'nohup /usr/src/pinbus/rc.pinbus &' >> /etc/rc.local
+echo 'nohup /usr/src/pinbus/tools/rc.pinbus &' >> /etc/rc.local
 
 ```

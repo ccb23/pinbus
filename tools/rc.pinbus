@@ -1,1 +1,1 @@
-cat /dev/pinbus | /usr/src/service.rb
+cat /dev/pinbus | /usr/src/tools/service.rb
